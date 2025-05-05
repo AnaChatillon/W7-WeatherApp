@@ -1,27 +1,29 @@
-function citySearch(event) {
-  event.preventDefault();
-  let searchCityInput = document.querySelector("#search-city-input");
-  let city = searchCityInput.value;
-  let apiKey = "be22fb4bc4c7fb43oa29a90de3d443t3";
+function displayTemp(response) {
+  let temperatureElement = document.querySelector("#temperature");
+  let temperature = response.data.temperature.current;
+  let cityElement = document.querySelector("#city-output");
 
-  if (city) {
-    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
-
-    axios.get(apiUrl).then(displayTemp);
-
-    let h1 = document.querySelector("h1");
-    h1.innerHTML = city;
-  }
+  cityElement.innerHTML = response.data.city;
+  temperatureElement.innerHTML = Math.round(temperature);
 }
 
-function displayTemp(response) {
-  let temp = Math.round(response.data.temperature.current);
-  let currentTemperature = document.querySelector(".temperature");
-  currentTemperature.innerHTML = temp;
+function searchCity(city) {
+  let apiKey = "be22fb4bc4c7fb43oa29a90de3d443t3";
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayTemp);
+}
+
+function handleSearchSubmit(event) {
+  event.preventDefault();
+  let searchInput = document.querySelector("#search-city-input");
+
+  searchCity(searchInput.value);
 }
 
 let form = document.querySelector("#city-search-form");
-form.addEventListener("submit", citySearch);
+form.addEventListener("submit", handleSearchSubmit);
+
+searchCity("Sintra");
 
 // Show the curruent time (Week day + hour & minutes)
 
